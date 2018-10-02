@@ -202,11 +202,12 @@ class Map(MacroElement):
         crs: L.CRS.{{this.crs}},
         zoomControl: {{this.zoom_control.__str__().lower()}},
         });
+{% if this.flag_control  %}{{this.get_name()}}.flagControl = {{ this.flag_control.get_name() }}{% endif %}
 {% if this.control_scale %}L.control.scale().addTo({{this.get_name()}});{% endif %}
-    
+
     {% if this.objects_to_stay_in_front %}
     function objects_in_front() {
-        {% for obj in this.objects_to_stay_in_front %}    
+        {% for obj in this.objects_to_stay_in_front %}
             {{ obj.get_name() }}.bringToFront();
         {% endfor %}
     };
@@ -225,7 +226,8 @@ $(document).ready(objects_in_front);
                  min_lon=-180, max_lon=180, max_bounds=False,
                  detect_retina=False, crs='EPSG3857', control_scale=False,
                  prefer_canvas=False, no_touch=False, disable_3d=False,
-                 subdomains='abc', png_enabled=False, zoom_control=True):
+                 subdomains='abc', png_enabled=False, zoom_control=True
+                 , flag_control = None):
         super(Map, self).__init__()
         self._name = 'Map'
         self._env = ENV
@@ -261,6 +263,7 @@ $(document).ready(objects_in_front);
         self.crs = crs
         self.control_scale = control_scale
         self.zoom_control = zoom_control
+        self.flag_control = flag_control
 
         self.global_switches = GlobalSwitches(
             prefer_canvas,

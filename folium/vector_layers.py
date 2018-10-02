@@ -280,14 +280,17 @@ class Circle(Marker):
                 [{{this.location[0]}}, {{this.location[1]}}],
                 {{ this.options }}
                 )
+                .on({ click: {{this.onclick.render(m=this._parent.get_name())}}})
                 .addTo({{this._parent.get_name()}});
             {% endmacro %}
             """)
 
-    def __init__(self, location, radius, popup=None, tooltip=None, **kwargs):
+    def __init__(self, location, radius, popup=None, tooltip=None,
+                onclick = Template(u"""function () {}"""), **kwargs):
         super(Circle, self).__init__(location=location, popup=popup,
                                      tooltip=tooltip)
         self._name = 'circle'
+        self.onclick  = onclick
         self.options = _parse_options(line=False, radius=radius, **kwargs)
 
 
