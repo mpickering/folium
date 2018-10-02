@@ -259,14 +259,18 @@ class Circle(Marker):
             var {{ this.get_name() }} = L.circle(
                 {{ this.location|tojson }},
                 {{ this.options|tojson }}
-            ).addTo({{ this._parent.get_name() }});
+            )
+            .on({ click: {{this.onclick.render(m=this._parent.get_name())}}})
+            .addTo({{ this._parent.get_name() }});
         {% endmacro %}
         """)
 
-    def __init__(self, location, radius, popup=None, tooltip=None, **kwargs):
+    def __init__(self, location, radius, popup=None, tooltip=None,
+                onclick = Template(u"""function () {}"""), **kwargs):
         super(Circle, self).__init__(location, popup=popup, tooltip=tooltip)
         self._name = 'circle'
         self.options = path_options(line=False, radius=radius, **kwargs)
+        self.onclick = onclick
 
 
 class CircleMarker(Marker):

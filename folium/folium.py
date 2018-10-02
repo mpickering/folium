@@ -190,6 +190,9 @@ class Map(MacroElement):
                 }
             );
 
+            {% if this.flag_control  %}
+                {{this.get_name()}}.flagControl = {{ this.flag_control.get_name() }}
+            {% endif %}
             {%- if this.control_scale %}
             L.control.scale().addTo({{ this.get_name() }});
             {%- endif %}
@@ -232,6 +235,7 @@ class Map(MacroElement):
             disable_3d=False,
             png_enabled=False,
             zoom_control=True,
+            flag_control = None,
             **kwargs
     ):
         super(Map, self).__init__()
@@ -262,6 +266,7 @@ class Map(MacroElement):
 
         self.crs = crs
         self.control_scale = control_scale
+        self.flag_control = flag_control
 
         self.options = parse_options(
             max_bounds=max_bounds_array,
